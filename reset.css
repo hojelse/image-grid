@@ -1,0 +1,11 @@
+img {
+  margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+  border: 0; /* 1 */
+  -ms-interpolation-mode: bicubic; /* 2 */
+  vertical-align: middle;
+}

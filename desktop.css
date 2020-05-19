@@ -1,0 +1,10 @@
+@media (hover: hover) {
+  .resizer::after {
+    transition: 80ms ease-in-out;
+    height: 0px;
+  }
+  
+  .resizer:hover::after {
+    height: 6px;
+  }
+}
