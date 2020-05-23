@@ -1,4 +1,14 @@
-window.onload = init
+let resizeLayoutDisabled = true;
+
+function disableResizeLayout() {
+  resizeLayoutDisabled = true;
+}
+
+function enableResizeLayout() {
+  resizeLayoutDisabled = false;
+}
+
+init()
 
 function init(){
   const imagePairs = document.querySelectorAll('.imagePair')
@@ -63,6 +73,7 @@ function makeResizableDiv(imagePair) {
   }
 
   function handleMove(height_1){
+    if(resizeLayoutDisabled) return;
     const height_2 = original_height_images - height_1
     let new_flex_1 = round(height_1 / original_height_images, 3)
     let new_flex_2 = round(height_2 / original_height_images, 3)

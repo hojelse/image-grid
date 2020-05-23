@@ -12,6 +12,8 @@ function deselectAll() {
     img.parentElement.dataset.selected = "false"
   })
   enableDraggables()
+  enableResizeLayout()
+  disablePinchScale()
 }
 
 function select(e) {
@@ -21,15 +23,15 @@ function select(e) {
   if (wasSelected === "false") {
     imageContainer.dataset.selected = "true"
     disableDraggables()
+    disableResizeLayout()
+    enablePinchScale()
   }
 }
-
-document.querySelector('.imageContainer').addEventListener("touchstart", tapHandler)
 
 var tappedTwice = false
 
 function tapHandler(e) {
-  if (!tappedTwice) {
+  if (!tappedTwice){
     tappedTwice = true
     setTimeout(function () {
       tappedTwice = false
@@ -37,7 +39,7 @@ function tapHandler(e) {
     return false
   }
   e.preventDefault()
-  resetImageScale(e)
+  // resetImageScale(e)
 }
 
 function resetImageScale(e){
@@ -53,11 +55,17 @@ function scrollHandler(e) {
   let img = imageContainer.querySelector(".img")
 
   let wheelAmount = e.wheelDelta
-  if (wheelAmount < -10) wheelAmount = -10
-  if (wheelAmount > 10) wheelAmount = 10
 
-  let newScale = round(Number.parseFloat(img.dataset.scale) + wheelAmount / 100, 3)
+  newAmount = scaleAmountCap(wheelAmount, img)
+  let newScale = round(Number.parseFloat(img.dataset.scale) + newAmount / 100, 3)
+
   scaleImage(img, newScale)
+}
+
+function scaleAmountCap(newAmount) {
+  if (newAmount < -10) newAmount = -10
+  if (newAmount > 10) newAmount = 10
+  return newAmount
 }
 
 function scaleImage(img, newScale) {
@@ -73,21 +81,21 @@ function round(num, decimals) {
   return Math.round((num + Number.EPSILON) * decimalsFactor) / decimalsFactor
 }
 
-function moveImage(e) {
-  let imageContainer = e.currentTarget.parentElement
-  if (imageContainer.dataset.selected !== "true") return
-  let img = imageContainer.querySelector(".img")
+// function moveImage(e) {
+//   let imageContainer = e.currentTarget.parentElement
+//   if (imageContainer.dataset.selected !== "true") return
+//   let img = imageContainer.querySelector(".img")
 
-  let wheelAmount = e.wheelDelta
-  if (wheelAmount < -10) wheelAmount = -10
-  if (wheelAmount > 10) wheelAmount = 10
+//   let wheelAmount = e.wheelDelta
+//   if (wheelAmount < -10) wheelAmount = -10
+//   if (wheelAmount > 10) wheelAmount = 10
 
-  img.dataset.scale = round(
-    Number.parseFloat(img.dataset.scale) + wheelAmount / 100,
-    3
-  )
-  if (img.dataset.scale < 1) img.dataset.scale = 1
-  if (img.dataset.scale > 5) img.dataset.scale = 5
-  img.style.transform = "scale(" + img.dataset.scale + ")"
-  if (img.dataset.scale == 1) img.style.transform = "none"
-}
+//   img.dataset.scale = round(
+//     Number.parseFloat(img.dataset.scale) + wheelAmount / 100,
+//     3
+//   )
+//   if (img.dataset.scale < 1) img.dataset.scale = 1
+//   if (img.dataset.scale > 5) img.dataset.scale = 5
+//   img.style.transform = "scale(" + img.dataset.scale + ")"
+//   if (img.dataset.scale == 1) img.style.transform = "none"
+// }
