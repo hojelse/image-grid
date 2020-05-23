@@ -5,6 +5,7 @@ imgs.forEach((img) => {
   img.addEventListener("click", select)
   img.addEventListener("click", tapHandler)
   img.addEventListener("touchstart", tapHandler)
+  // img.addEventListener("touchstart", moveImage)
 })
 
 function deselectAll() {
@@ -71,9 +72,8 @@ function scaleAmountCap(newAmount) {
 function scaleImage(img, newScale) {
   if (newScale < 1) newScale = 1
   if (newScale > 5) newScale = 5
-  img.style.transform = "scale(" + newScale + ")"
   img.dataset.scale = newScale
-  if (newScale == 1) img.style.transform = "none"
+  setTranforms(img);
 }
 
 function round(num, decimals) {
@@ -81,21 +81,20 @@ function round(num, decimals) {
   return Math.round((num + Number.EPSILON) * decimalsFactor) / decimalsFactor
 }
 
-// function moveImage(e) {
-//   let imageContainer = e.currentTarget.parentElement
-//   if (imageContainer.dataset.selected !== "true") return
-//   let img = imageContainer.querySelector(".img")
+function moveImage(e) {
+  let imageContainer = e.currentTarget.parentElement
+  if (imageContainer.dataset.selected !== "true") return
+  let img = imageContainer.querySelector(".img")
 
-//   let wheelAmount = e.wheelDelta
-//   if (wheelAmount < -10) wheelAmount = -10
-//   if (wheelAmount > 10) wheelAmount = 10
+  // img.dataset.x = img.dataset.x - 10
+  setTranforms(img)
+}
 
-//   img.dataset.scale = round(
-//     Number.parseFloat(img.dataset.scale) + wheelAmount / 100,
-//     3
-//   )
-//   if (img.dataset.scale < 1) img.dataset.scale = 1
-//   if (img.dataset.scale > 5) img.dataset.scale = 5
-//   img.style.transform = "scale(" + img.dataset.scale + ")"
-//   if (img.dataset.scale == 1) img.style.transform = "none"
-// }
+function setTranforms(img) {
+  let dataset = img.dataset;
+  if (dataset.scale == 1) {
+    img.style.transform = "translate(" + dataset.x + "px, " + dataset.y + "px)"
+  } else {
+    img.style.transform = "scale(" + dataset.scale + ") translate(" + dataset.x + "px, " + dataset.y + "px)"
+  }
+}
