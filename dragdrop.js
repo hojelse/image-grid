@@ -22,6 +22,18 @@ function initDropZones(dropZones) {
     }
 }
 
+// touchInit();
+// function touchInit(){
+//     document.addEventListener('touchstart', handler, true);
+//     document.addEventListener('touchmove', handler, true);
+//     document.addEventListener('touchend', handler, true);
+//     document.addEventListener('touchleave', handler, true);
+//     document.addEventListener('touchcancel', handler, true);        
+// };
+// function handler(e) {
+//     console.log(e);
+// }
+
 function initDraggable(draggable) {
     draggable.addEventListener("dragstart", dragStartHandler);
     draggable.addEventListener("drag", dragHandler);
@@ -36,7 +48,9 @@ function initDropZone(dropZone) {
     dropZone.addEventListener("drop", dropZoneDropHandler);    
 }
 
-function dragStartHandler(e) {  
+function dragStartHandler(e) {
+    fromDropZone = e.currentTarget.parentElement
+    
     setDropZonesHighlight();
     this.classList.add('dragged', 'drag-feedback');
     e.dataTransfer.setData("type/dragged-box", 'dragged');
@@ -48,12 +62,29 @@ function dragHandler(e) {
     // TODO
 }
 
-function dragEndHandler() {
+function dragEndHandler(e) {    
     setDropZonesHighlight(false);
     this.classList.remove('dragged');
+    
+    dropOnMobile(e);
+}
+
+function dropOnMobile(e) {
+    let fromImage = e.srcElement;
+    let toImage = document.elementFromPoint(e.screenX, e.screenY);
+    
+    if (toImage === null || toImage === undefined) return;
+    if (!toImage.classList.contains('img')) return;
+    
+    let fromContainer = fromImage.parentElement;
+    let toContainer = toImage.parentElement;
+
+    toContainer.appendChild(fromImage);
+    fromContainer.appendChild(toImage);
 }
 
 function dropZoneEnterHandler(e) {
+    currentDropZone = e.toElement.parentElement
     if (e.dataTransfer.types.includes('type/dragged-box')) {
         this.classList.add("over-zone");
         e.preventDefault();
@@ -61,13 +92,14 @@ function dropZoneEnterHandler(e) {
 }
 
 function dropZoneOverHandler(e) {
+    currentDropZone = e.toElement.parentElement
     if (e.dataTransfer.types.includes('type/dragged-box')) {
         e.preventDefault();
     }
 }
 
-function dropZoneLeaveHandler(e) {   
-    if (e.dataTransfer.types.includes('type/dragged-box') &&
+function dropZoneLeaveHandler(e) {
+        if (e.dataTransfer.types.includes('type/dragged-box') &&
         e.relatedTarget !== null &&
         e.currentTarget !== e.relatedTarget.closest('.drop-zone')) {
         this.classList.remove("over-zone");
