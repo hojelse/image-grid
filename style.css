@@ -80,16 +80,16 @@ body {
 }
 
 .img[data-img-id="0"] {
-  background-image: url("http://placeimg.com/2000/1700/animals");
+  background-image: url("http://placeimg.com/1200/1000/animals");
 }
 .img[data-img-id="1"] {
-  background-image: url("http://placeimg.com/2000/1701/animals");
+  background-image: url("http://placeimg.com/1200/1001/animals");
 }
 .img[data-img-id="2"] {
-  background-image: url("http://placeimg.com/2000/1702/animals");
+  background-image: url("http://placeimg.com/1200/1002/animals");
 }
 .img[data-img-id="3"] {
-  background-image: url("http://placeimg.com/2000/1703/animals");
+  background-image: url("http://placeimg.com/1200/1003/animals");
 }
 
 .resizer {
