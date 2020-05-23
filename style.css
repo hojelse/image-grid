@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  --pageWidth: 100%;
 }
 
 body {
@@ -8,49 +9,66 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  --pad: 30px;
+  background-color: #222;
 }
 
-.book {
-  box-sizing: border-box;
-  background-color: #444;
+.pageContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 100%;
-  padding: var(--pad);
+}
+
+.page {
+  flex-grow: 1;
+  background-color: white;
   display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+  position: relative;
   overflow: hidden;
 }
 
-.hiddenBook {
-  display: none;
-}
-
-.images {
+.imagePair {
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  /* overflow: hidden; */
 }
 
-.image {
+.imageContainer {
   box-sizing: border-box;
-  /* border: solid var(--pad) #444; */
   width: 100%;
   flex-grow: 1;
+  flex-basis: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* overflow: hidden; */
-  flex-basis: 0;
+  overflow: hidden;
+  position: relative;
 }
 
-.image img {
-  flex-shrink: 0;
-  min-width: 100%;
-  min-height: 100%;
+.imageContainer[data-selected="true"] {
+  overflow: visible;
+}
+
+.imageContainer[data-selected="true"] .img {
+  z-index: 1;
+}
+
+.imageContainer[data-selected="true"]::before {
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px white;
+  /* border: solid 2px white; */
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
 }
 
 .img {
@@ -59,24 +77,25 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  transition: 100ms ease-in-out;
+  /* transition: 100ms ease-in-out; */
 }
 
-.img1 {
-  background-image: url("http://placeimg.com/1000/700/animals");
+.img[data-img-id="0"] {
+  background-image: url("http://placeimg.com/2000/1700/animals");
 }
-.img2 {
-  background-image: url("http://placeimg.com/1000/700/animals");
+.img[data-img-id="1"] {
+  background-image: url("http://placeimg.com/2000/1701/animals");
 }
-.img3 {
-  background-image: url("http://placeimg.com/1000/700/animals");
+.img[data-img-id="2"] {
+  background-image: url("http://placeimg.com/2000/1702/animals");
 }
-.img4 {
-  background-image: url("http://placeimg.com/1000/700/animals");
+.img[data-img-id="3"] {
+  background-image: url("http://placeimg.com/2000/1703/animals");
 }
 
 .resizer {
-  width: 100%;
+  z-index: 2;
+  flex-shrink: 1;
   --hover-area: 40px;
   height: var(--hover-area);
   margin: calc(0px - var(--hover-area) / 2) 0;
@@ -97,18 +116,14 @@ body {
   height: 6px;
 }
 
-/* Dragging */
-
 .draggable {
-  cursor: grab;
+  cursor: all-scroll;
 }
 
 .dragged {
-  /* opacity: 0; */
   transform: scale(1.05);
 }
 
 .over-zone {
   border-color: rgb(0, 140, 255);
 }
-

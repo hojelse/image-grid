@@ -1,50 +1,38 @@
 window.onload = init
 
 function init(){
-  const imagesList = document.querySelectorAll('.images')
-  for (let i = 0; i < imagesList.length; i++) {
-    makeResizableDiv(imagesList[i])
+  const imagePairs = document.querySelectorAll('.imagePair')
+  for (let i = 0; i < imagePairs.length; i++) {
+    makeResizableDiv(imagePairs[i])
   }
 }
 
-function makeResizableDiv(images) {
-  const image1 = images.querySelector('.image1');
-  const image2 = images.querySelector('.image2');
-  const resizer = images.querySelector('.resizer')
+function makeResizableDiv(imagePair) {
+  const imageContainer0 = imagePair.querySelector('.imageContainer[data-pos="0"]')
+  const imageContainer1 = imagePair.querySelector('.imageContainer[data-pos="1"]')
+  const resizer = imagePair.querySelector('.resizer')
 
-  // resizer.addEventListener("touchend", handleEnd, false);
-  // resizer.addEventListener("touchcancel", handleCancel, false);
-  // resizer.addEventListener("touchleave", handleEnd, false);
-  // resizer.addEventListener("touchmove", handleMove, false);
-
-  const minimum_size = 100;
-  let original_height_1 = 0;
-  let original_y_1 = 0;
-  let original_mouse_y = 0;
+  const minimum_size = 0.05
+  let original_height_1 = 0
+  let original_y_1 = 0
+  let original_mouse_y = 0
   if(resizer != undefined) setUp(resizer)
 
   function setUp(currentResizer) {
-    currentResizer.addEventListener('mousedown', e => handleMouseStart(e));
-    currentResizer.addEventListener("touchstart", e => handleTouchStart(e), false);
+    currentResizer.addEventListener('mousedown', e => handleMouseStart(e))
+    currentResizer.addEventListener("touchstart", e => handleTouchStart(e), false)
   }
 
   function handleMouseStart(e) {
-    e.preventDefault();
-    original_height_1 = parseFloat(getComputedStyle(image1, null).getPropertyValue('height').replace('px', ''));
-    original_height_images = parseFloat(getComputedStyle(images, null).getPropertyValue('height').replace('px', ''));
-    original_y_1 = image1.getBoundingClientRect().top;
-    original_mouse_y = e.pageY;
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseEnd);
+    setOriginalHeights(e)
+    original_mouse_y = e.pageY
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseEnd)
   }
 
   function handleMouseMove(e) {
     const height_1 = original_height_1 + (e.pageY - original_mouse_y)
-    const height_2 = original_height_images - height_1
-    if (height_1 > minimum_size && height_2 > minimum_size) {
-      image1.style.flexGrow = round(height_1 / original_height_images, 3)
-      image2.style.flexGrow = round(height_2 / original_height_images, 3)
-    }
+    handleMove(height_1)
   }
 
   function handleMouseEnd() {
@@ -52,26 +40,36 @@ function makeResizableDiv(images) {
   }
 
   function handleTouchStart(e) {
-    e.preventDefault();
-    original_height_1 = parseFloat(getComputedStyle(image1, null).getPropertyValue('height').replace('px', ''));
-    original_height_images = parseFloat(getComputedStyle(images, null).getPropertyValue('height').replace('px', ''));
-    original_y_1 = image1.getBoundingClientRect().top;
-    original_mouse_y = e.touches[0].clientY;
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
+    setOriginalHeights(e)
+    original_mouse_y = e.touches[0].clientY
+    window.addEventListener('touchmove', handleTouchMove)
+    window.addEventListener('touchend', handleTouchEnd)
   }
 
   function handleTouchMove(e) {
     const height_1 = original_height_1 + (e.touches[0].clientY - original_mouse_y)
-    const height_2 = original_height_images - height_1
-    if (height_1 > minimum_size && height_2 > minimum_size) {
-      image1.style.flexGrow = round(height_1 / original_height_images, 3)
-      image2.style.flexGrow = round(height_2 / original_height_images, 3)
-    }
+    handleMove(height_1)
   }
 
   function handleTouchEnd() {
     window.removeEventListener('touchmove', handleTouchMove)
+  }
+
+  function setOriginalHeights(e) {
+    e.preventDefault()
+    original_height_1 = parseFloat(getComputedStyle(imageContainer0, null).getPropertyValue('height').replace('px', ''))
+    original_height_images = parseFloat(getComputedStyle(imagePair, null).getPropertyValue('height').replace('px', ''))
+    original_y_1 = imageContainer0.getBoundingClientRect().top
+  }
+
+  function handleMove(height_1){
+    const height_2 = original_height_images - height_1
+    let new_flex_1 = round(height_1 / original_height_images, 3)
+    let new_flex_2 = round(height_2 / original_height_images, 3)
+    if (new_flex_1 > minimum_size && new_flex_2 > minimum_size) {
+      imageContainer0.style.flexGrow = new_flex_1
+      imageContainer1.style.flexGrow = new_flex_2
+    }
   }
 }
 

@@ -36,7 +36,7 @@ function initDropZone(dropZone) {
     dropZone.addEventListener("drop", dropZoneDropHandler);    
 }
 
-function dragStartHandler(e) {
+function dragStartHandler(e) {  
     setDropZonesHighlight();
     this.classList.add('dragged', 'drag-feedback');
     e.dataTransfer.setData("type/dragged-box", 'dragged');
@@ -100,3 +100,16 @@ function deferredOriginChanges(origin, dragFeedbackClassName) {
     });
 }
 
+function disableDraggables() {
+    let draggables = document.querySelectorAll(".draggable");
+    draggables.forEach(draggable => {
+        draggable.setAttribute("draggable", "false");
+    });
+}
+
+function enableDraggables() {
+    let draggables = document.querySelectorAll(".draggable");
+    draggables.forEach(draggable => {
+        draggable.setAttribute("draggable", "true");
+    });
+}
