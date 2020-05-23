@@ -1,4 +1,4 @@
-let resizeLayoutDisabled = true;
+let resizeLayoutDisabled = false;
 
 function disableResizeLayout() {
   resizeLayoutDisabled = true;
